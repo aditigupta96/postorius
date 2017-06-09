@@ -78,6 +78,9 @@
                                     </label>
                                   </td>
                                   <td>
+                                    <a href = "/postorius/lists/{{list.list_id}}/essay/{{ member.email }}/">{% trans 'Essay Details' %}</a>
+                                  </td>
+                                  <td>
                                     <a href="{% url 'list_member_options' list.list_id member.email %}">{% trans 'Member Options' %}</a>
                                   </td>
                                 {% else %}
