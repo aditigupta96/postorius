@@ -1,0 +1,65 @@
+{% extends "postorius/base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+{% load nav_helpers %}
+
+{% block content %}
+    {% if object|length > 0 %}
+        <font color="3399FF"><h2>{% trans 'Essay details' %}</h2></font>
+        <ul>
+            {% for p in object %}
+            <h4><li><u><font  face="verdana">{% trans 'Date' %} : {{ p.date }} </font></u></li></h4>
+            <ul>
+
+            {% if p.display_name %}
+                        <p><b>{% trans 'Name' %}</b> :<i>{{ p.display_name }}</i></p>
+            {% else %}
+                <p><b>{% trans 'Name' %}</b> :<i>{% trans 'Name is not provided.' %}</i></p>
+            {% endif %}
+
+
+            {% if p.link %}
+                <p><i><a href="{{p.link|safe}}">Profile link</a></i></p>   
+            {% else %}
+                <p>{% trans 'No profile link' %}</p>
+            {% endif %}
+
+            <p><b>{% trans 'Email' %}</b> :<i> {{ p.email }}</i></p>
+                
+            {% if p.is_woman %}
+                <p><b>{% trans 'Are you a woman?' %} </b>: <i>{% trans 'Yes' %}</i></p>
+            {% else %}
+                <p><b>{% trans 'Are you a woman?' %} </b>: <i>{% trans 'No' %}</i></p>
+            {% endif %}
+            
+            {% if p.is_woman_in_tech  %}
+                <p><b>{% trans 'Are you involved in technology?' %} </b>: <i>{% trans 'Yes' %}</i></p>
+            {% else %}
+                <p><b>{% trans 'Are you involved in technology?' %} </b>: <i>{% trans 'No' %}</i></p>
+            {% endif %}
+
+            {% if p.essay %}
+                <p><b>{% trans 'Achievements in technology' %} </b>: <i>{{ p.essay }}</i></p>
+            {% else %}
+                <p><b>{% trans 'Achievements in technology' %}</b> :<i> {% trans 'No essay provided.' %}</i></p>
+            {% endif %}
+
+            <p><b>{% trans 'Country' %} </b>: <i>{{ p.country }}</i></p>
+
+            {% if p.city %}
+                <p><b>{% trans 'City' %} </b>: <i>{{ p.city }}</i></p>
+            {% else %}
+                <p><b>{% trans 'City' %} </b>: <i>{% trans 'City is not provided.' %}</i></p>
+            {% endif %}
+
+
+            <p><b>{% trans 'List name' %}</b> : <i>{{ p.list_id }}</i></p>
+            
+            <p><b>{% trans 'Terms and conditions' %}</b> : <i>{{ p.accepted_terms }}</i></p>
+            </ul>
+            {% endfor %}
+        </ul>
+     {% else %}
+        <p>{% trans 'There are currently no essay for this user.' %}</p>
+    {% endif %}
+{% endblock %}
