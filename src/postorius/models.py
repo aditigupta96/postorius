@@ -22,10 +22,12 @@ from __future__ import (
 
 import logging
 
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import models
 from django.http import Http404
 from django_mailman3.lib.mailman import get_mailman_client
 from mailmanclient import MailmanConnectionError
@@ -202,3 +204,22 @@ class Member(MailmanRestModel):
     """Member model class.
     """
     objects = MailmanRestManager('member', 'members')
+
+
+class EssaySubscribe(models.Model):
+    """Essay model class.
+    """
+    list_id = models.CharField(max_length=100)
+    email = models.EmailField()
+    display_name = models.CharField(max_length=100)
+    link = models.CharField(max_length=100,default=None)
+    is_woman = models.BooleanField(default=False)
+    is_woman_in_tech = models.BooleanField(default=False)
+    essay = models.CharField(max_length=800)
+    accepted_terms = models.BooleanField(default=False)
+    city = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+            return u'%s   %s' % (self.display_name, self.essay)
