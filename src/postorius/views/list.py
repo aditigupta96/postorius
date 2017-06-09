@@ -45,7 +45,7 @@ from postorius.forms import (
     ListIdentityForm, ListMassSubscription, ListMassRemoval, ListAddBanForm,
     ListHeaderMatchForm, ListHeaderMatchFormset, MemberModeration,
     DMARCMitigationsForm, ListAnonymousSubscribe)
-from postorius.models import Domain, List, Mailman404Error
+from postorius.models import Domain, List, Mailman404Error, EssaySubscribe
 from postorius.auth.decorators import (
     list_owner_required, list_moderator_required, superuser_required)
 from postorius.views.generic import MailingListView
@@ -308,6 +308,42 @@ class ListSubscribeView(MailingListView):
             form = ListSubscribe(user_emails, request.POST)
             if form.is_valid():
                 email = request.POST.get('email')
+                display_name = request.POST.get('display_name')
+                link = request.POST.get('link')
+                is_woman = request.POST.get('is_woman')
+                is_woman_in_tech = request.POST.get('is_woman_in_tech')
+                accepted_terms = request.POST.get('accepted_terms')
+                country = request.POST.get('country')
+                city = request.POST.get('city')
+                essay = request.POST.get('essay')
+
+                essay_subscribe = EssaySubscribe()
+
+                # Store the values entered by the user in model class EssaySubscribe.
+                essay_subscribe.list_id = list_id
+                essay_subscribe.email = email
+                essay_subscribe.display_name = display_name
+                essay_subscribe.link = link
+                essay_subscribe.essay = essay
+                essay_subscribe.city = city
+
+                if is_woman == 'Yes':
+                    print "afafafafaf"
+                    essay_subscribe.is_woman = True
+                else:
+                    essay_subscribe.is_woman = False
+
+                if is_woman_in_tech == 'Yes':
+                    essay_subscribe.is_woman_in_tech = True
+                else:
+                    essay_subscribe.is_woman_in_tech = False
+
+                if accepted_terms == 'on':
+                    essay_subscribe.accepted_terms = True
+                essay_subscribe.country = country
+
+                essay_subscribe.save()
+
                 response = self.mailing_list.subscribe(
                     email, pre_verified=True, pre_confirmed=True)
                 if (type(response) == dict and
