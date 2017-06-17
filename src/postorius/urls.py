@@ -24,12 +24,13 @@ from postorius.views import list as list_views
 from postorius.views import user as user_views
 from postorius.views import domain as domain_views
 from postorius.views import rest as rest_views
-from postorius.views.essay import EssayList
+from postorius.views.essay import EssayList, EssayDeleteView
 
 
 list_patterns = [
     url(r'^csv_view/$', list_views.csv_view, name='csv_view'),
     url(r'^essay/(?P<email>[\w.-]+@[\w.-]+)/$', EssayList, name='view_essay'),
+    url(r'^essay/delete/(?P<email>[\w.-]+@[\w.-]+)/$', EssayDeleteView.as_view(), name='delete_essay'),
     url(r'^members/options/(?P<email>.+)$', list_views.list_member_options,
         name='list_member_options'),
     url(r'^members/(?P<role>\w+)/$', list_views.list_members_view,
