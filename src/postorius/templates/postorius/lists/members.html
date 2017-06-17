@@ -78,10 +78,13 @@
                                     </label>
                                   </td>
                                   <td>
-                                    <a href = "/postorius/lists/{{list.list_id}}/essay/{{ member.email }}/">{% trans 'Essay Details' %}</a>
+                                    <a href = "/postorius/lists/{{list.list_id}}/essay/{{member.email }}/">{% trans 'Essay Details' %}</a>
                                   </td>
                                   <td>
                                     <a href="{% url 'list_member_options' list.list_id member.email %}">{% trans 'Member Options' %}</a>
+                                  </td>
+                                  <td>
+                                    <a href="{% url 'delete_essay' list.list_id member.email%}" class="btn btn-danger">{% trans 'Delete Essay History' %}</a>
                                   </td>
                                 {% else %}
                                     <td>{{ member }}</td>
