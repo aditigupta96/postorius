@@ -1,0 +1,54 @@
+{% extends "postorius/base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+{% load nav_helpers %}
+
+{% block content %}
+	<div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>{% trans 'LIST NAME' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td>{{ listname }}</td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+
+    
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>{% trans 'SUBJECT' %}</th>
+                        <th>{% trans 'References' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, thread in threads.items %}
+                        <tr>
+                            <td>{{ thread.subject }}</td>
+
+                        	<td>
+                        		<ul>
+
+                        		{% for reference in thread.references %}
+                        			<li><a href="{{ reference }}">{{reference}}</a></li>
+                        		{% endfor %}
+
+                        		</ul>
+                        	</td>
+
+                        </tr>
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+{% endblock %}
