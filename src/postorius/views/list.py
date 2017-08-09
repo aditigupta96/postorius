@@ -21,6 +21,7 @@ from __future__ import absolute_import, unicode_literals
 import csv
 import email.utils
 import logging
+import re
 import requests
 
 from allauth.account.models import EmailAddress
@@ -996,4 +997,45 @@ def list_description(request, list_id):
         'threads': threads,
         'listname': listname,
         'description': description,
+        'list_id': list_id,
+        })
+
+
+@list_owner_required
+def thread_references(request, list_id):
+    mailing_list = List.objects.get_or_404(fqdn_listname=list_id)
+    listname = mailing_list.fqdn_listname
+
+    base_url = settings.HYPERKITTY_API_URL
+    url = base_url + listname + '/' + 'threads/'+ '?format=json'
+    thread_response = requests.get(url)
+    threads_json = thread_response.json()
+    hyperkitty_url = settings.HYPERKITTY_URL
+
+    threads = {}
+    for thread in threads_json:
+        thread_data = {}
+        emails_url = thread['emails']
+        email_response = requests.get(emails_url)
+        emails_json = email_response.json()
+        references = []
+        for email in emails_json:
+            email_url = email['url']
+            email_data = requests.get(email_url)
+            email_content = email_data.json()['content']
+            data = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', email_content)
+            references.extend(data)
+
+        thread_data['subject'] = thread['subject']
+        thread_data['references'] = references
+        threads[thread['thread_id']] = thread_data
+    
+    thread_references_data = {}
+    for key in threads:
+        if(len(threads[key]['references']) > 0):
+            thread_references_data[key] = threads[key]
+    print thread_references_data
+    return render(request, 'postorius/lists/thread_references.html', {
+        'threads': thread_references_data,
+        'listname': listname,
         })
