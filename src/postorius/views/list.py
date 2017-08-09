@@ -28,6 +28,7 @@ from allauth.account.models import EmailAddress
 from django.http import HttpResponse, HttpResponseNotAllowed, Http404
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.core.validators import validate_email
@@ -50,7 +51,11 @@ from postorius.forms import (
     ListIdentityForm, ListMassSubscription, ListMassRemoval, ListAddBanForm,
     ListHeaderMatchForm, ListHeaderMatchFormset, MemberModeration,
     DMARCMitigationsForm, ListAnonymousSubscribe)
+
+from postorius.models import Domain, List, Mailman404Error, UnsubscriberStats
+
 from postorius.models import Domain, List, Mailman404Error, EssaySubscribe
+
 from postorius.auth.decorators import (
     list_owner_required, list_moderator_required, superuser_required)
 from postorius.views.generic import MailingListView
@@ -73,6 +78,11 @@ def list_members_view(request, list_id, role=None):
                 members = form.cleaned_data['choices']
                 for member in members:
                     mailing_list.unsubscribe(member)
+
+                    u = User.objects.get(email=member)
+                    stats = UnsubscriberStats.create(list_id, member, "Member mgt page", 
+                                                     u.id,u.username)
+                    stats.save()
                 messages.success(request, _('The selected members'
                                             ' have been unsubscribed'))
                 return redirect('list_members', list_id, role)
@@ -414,12 +424,16 @@ class ListUnsubscribeView(MailingListView):
     """Unsubscribe from a mailing list."""
 
     @method_decorator(login_required)
-    def post(self, request, *args, **kwargs):
+    def post(self, request, list_id, *args, **kwargs):
         email = request.POST['email']
         try:
             self.mailing_list.unsubscribe(email)
             messages.success(request, _('%s has been unsubscribed'
                                         ' from this list.') % email)
+            u = User.objects.get(email=email)
+            stats = UnsubscriberStats.create(list_id, email, "Members option page", 
+                                             u.id, u.username)
+            stats.save()
         except ValueError as e:
             messages.error(request, e)
         return redirect('list_summary', self.mailing_list.list_id)
@@ -470,7 +484,7 @@ class ListMassRemovalView(MailingListView):
                       {'form': form, 'list': self.mailing_list})
 
     @method_decorator(list_owner_required)
-    def post(self, request, *args, **kwargs):
+    def post(self, request, list_id, *args, **kwargs):
         form = ListMassRemoval(request.POST)
         if not form.is_valid():
             messages.error(request, _('Please fill out the form correctly.'))
@@ -484,6 +498,11 @@ class ListMassRemovalView(MailingListView):
                                    ' unsubscribed from %(list)s.') %
                         {'address': address,
                          'list': self.mailing_list.fqdn_listname})
+
+                    u = User.objects.get(email=address)
+                    stats = UnsubscriberStats.create(list_id, address, "Admin mass Unsubscription", 
+                                                      u.id,u.username)
+                    stats.save()
                 except (HTTPError, ValueError) as e:
                     messages.error(request, e)
                 except ValidationError:
@@ -838,6 +857,10 @@ def remove_all_subscribers(request, list_id):
         try:
             for names in mlist.members:
                 mlist.unsubscribe(names.email)
+                u = User.objects.get(email=names.email)
+                stats = UnsubscriberStats.create(list_id,names.email,"Admin mass Unsubscription", 
+                                                 u.id,u.username)
+                stats.save()
             messages.success(request, _('All members have been'
                                         ' unsubscribed from the list.'))
             return redirect('list_members', mlist.list_id)

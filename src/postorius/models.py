@@ -29,8 +29,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models
 from django.http import Http404
+from django.db import models
 from django_mailman3.lib.mailman import get_mailman_client
 from mailmanclient import MailmanConnectionError
+from django.utils import timezone
 from django.utils.six.moves.urllib.error import HTTPError
 
 logger = logging.getLogger(__name__)
@@ -206,6 +208,30 @@ class Member(MailmanRestModel):
     objects = MailmanRestManager('member', 'members')
 
 
+
+class UnsubscriberStats(models.Model):
+    """Unsubscriber Stats model class
+    """
+    list_id = models.CharField(max_length=100)
+    email = models.EmailField()
+    channel = models.CharField(max_length=100)
+    date = models.DateTimeField(default=timezone.now)
+    user_id = models.IntegerField()
+    user = models.CharField(max_length=100)
+
+    def __str__(self):
+        return u'%s   %s   %s   %s  %d %s' % (self.list_id, self.email, self.channel,self.user,self.user_id,self.date)
+
+    @classmethod
+    def create(cls, list_id, email, channel, user_id, user):
+        return cls(list_id=list_id, email=email, channel=channel, user_id=user_id, user=user)
+
+    def __hash__(self):
+        return hash(self.user_id)
+
+    def __eq__(self, other):
+        return self.user_id == other.user_id
+
 class EssaySubscribe(models.Model):
     """Essay model class.
     """
@@ -223,3 +249,4 @@ class EssaySubscribe(models.Model):
 
     def __str__(self):
             return u'%s   %s' % (self.display_name, self.essay)
+

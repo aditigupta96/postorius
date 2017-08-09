@@ -25,6 +25,7 @@ from allauth.account.models import EmailAddress
 from django.forms import formset_factory
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -32,7 +33,7 @@ from django.utils.translation import gettext as _
 from django.views.generic import FormView
 from django.http import Http404
 
-from postorius.models import List, MailmanUser
+from postorius.models import List, MailmanUser, UnsubscriberStats
 from postorius.forms import (
     UserPreferences, UserPreferencesFormset, ChangeSubscriptionForm)
 from postorius.views.generic import MailmanClientMixin
@@ -298,8 +299,24 @@ class UserSubscriptionPreferencesView(UserPreferencesView):
         for form, subscription in zip(
                 data['formset'].forms, self.subscriptions):
             form.list_id = subscription.list_id
+
         return data
 
+    def form_valid(self, form):
+        all_data = form.cleaned_data
+        # print self.mm_user.subscriptions
+        for data, subscription in zip(all_data, self.subscriptions):
+            delivery_status = data['delivery_status']
+            list_id = subscription.list_id
+            email = subscription.email
+            user = User.objects.get(email=email)
+
+            if delivery_status == 'by_user':
+                stats = UnsubscriberStats.create(list_id, email, "Disabled", 
+                                                 user.id, user)
+                stats.save()
+
+        return super(UserSubscriptionPreferencesView, self).form_valid(form)
 
 @login_required
 def user_subscriptions(request):

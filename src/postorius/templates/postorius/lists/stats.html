@@ -1,0 +1,422 @@
+{% extends "postorius/base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+{% load nav_helpers %}
+
+{% block content %}
+     <font color="3399FF"><h3> Stats of Unsubscribers </h3></font>
+<br>
+
+<div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Mode of Unsubscription' %}</th>
+                        <th>{% trans 'Count' %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>{% trans 'Member mgt page' %}</td>
+                        <td>{{stats_member_mgt_page|length}}</td>
+   
+                        {% if stats_member_mgt_page|length > 0 %} 
+                        <td>
+                           <button type="button" class="btn btn-primary" data-toggle="modal"data-target="#popUpWindow1" >Unsubscribers</button>
+
+                        </td> 
+                        {% else %}
+                        <td>
+                          {% trans 'No Unsubscriber' %}
+                        </td>
+                        {% endif %}
+           
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Members option page' %}</td>
+                        <td>{{stats_members_option_page|length}}</td>
+
+                        {% if stats_members_option_page|length > 0 %} 
+                        <td>
+                           <button type="button" class="btn btn-primary" data-toggle="modal"data-target="#popUpWindow2" >Unsubscribers</button>
+                        </td> 
+                        {% else %}
+                        <td>
+                          {% trans 'No Unsubscriber' %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Admin mass Unsubscription' %}</td>
+                        <td>{{stats_admin_mass_unsubscription|length}}</td>
+
+                        {% if stats_admin_mass_unsubscription|length > 0 %} 
+                        <td>
+                           <button type="button" class="btn btn-primary" data-toggle="modal"data-target="#popUpWindow3" >Unsubscribers</button>
+                        </td> 
+                        {% else %}
+                        <td>
+                          {% trans 'No Unsubscriber' %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td>{% trans 'Disabled' %}</td>
+                        <td>{{stats_disabled|length}}</td>
+
+                        {% if stats_disabled|length > 0 %} 
+                        <td>
+                           <button type="button" class="btn btn-primary" data-toggle="modal"data-target="#popUpWindow4" >Unsubscribers</button>
+                        </td> 
+                        {% else %}
+                        <td>
+                          {% trans 'No Unsubscriber' %}
+                        </td>
+                        {% endif %}
+                    </tr>
+                    
+                </tbody>
+                <thead>
+                    <tr>
+                        <th>{% trans 'Total No. of Unsubscribers' %}</th>
+                        <th>{{list_stats|length}}</th>
+                        
+                        {% if list_stats|length > 0 %} 
+                        <th>
+                           <button type="button" class="btn btn-primary" data-toggle="modal"data-target="#popUpWindow5" >Unsubscribers</button>
+                        </th>
+                        {% else %}
+                        <th>
+                          {% trans 'No Unsubscriber' %}
+                        </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+            </table>
+</div>
+
+
+<font color="3399FF"><h3> Unique Subject lines </h3></font>
+<br>
+
+<div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                        <th>{% trans 'Total No. of Unique Subject lines' %}</th>
+                        <th>{{unique_subject_list|length}}</th>
+                        
+                        {% if unique_subject_list|length > 0 %} 
+                        <th>
+                           <button type="button" class="btn btn-primary" data-toggle="modal"data-target="#popUpWindow6" >Subjects</button>
+                        </th>
+                        {% else %}
+                        <th>
+                          {% trans 'No Subjects discussed' %}
+                        </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+            </table>
+</div>
+
+<div>
+        <font color="3399FF"><h3> Number of subscribers that posted </h3></font>
+        <br>
+
+        <div class="table-responsive" >
+                <table class="table table-bordered table-striped">
+                      <thead>
+                        <tr>
+                            <th>{% trans 'Total No. of subscribers that posted' %}</th>
+                            <th>{{emails_count}}</th>
+                            
+                            
+                        </tr>
+                    </thead>
+                </table>
+        </div>
+        </div>
+
+<div class="modal fade" id="popUpWindow1">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Member mgt page</h4>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Date Of Unsubscription' %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for list in stats_member_mgt_page %}
+                        <tr>
+                        <td>
+                            {{ list.email }}
+                        </td>
+
+                        <td>
+                            {{ list.date }}
+                        </td>
+
+                       </tr>
+                         {% endfor %}
+                    
+                    
+                </tbody>
+        
+                    
+            </table>
+        </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+     </div>
+</div>
+
+<div class="modal fade" id="popUpWindow2">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Members option page</h4>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Date Of Unsubscription' %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for list in stats_members_option_page %}
+                        <tr>
+                        <td>
+                            {{ list.email }}
+                        </td>
+
+                        <td>
+                            {{ list.date }}
+                        </td>
+
+                       </tr>
+                         {% endfor %}
+                    
+                    
+                </tbody>
+        
+                    
+            </table>
+        </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+     </div>
+</div>
+
+
+<div class="modal fade" id="popUpWindow3">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Admin mass Unsubscription</h4>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Date Of Unsubscription' %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for list in stats_admin_mass_unsubscription %}
+                        <tr>
+                        <td>
+                            {{ list.email }}
+                        </td>
+
+                        <td>
+                            {{ list.date }}
+                        </td>
+
+                       </tr>
+                         {% endfor %}
+                    
+                    
+                </tbody>
+        
+                    
+            </table>
+        </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+     </div>
+</div>
+
+
+<div class="modal fade" id="popUpWindow4">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Disabled</h4>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Date Of Unsubscription' %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for list in stats_disabled %}
+                        <tr>
+                        <td>
+                            {{ list.email }}
+                        </td>
+
+                        <td>
+                            {{ list.date }}
+                        </td>
+
+                       </tr>
+                         {% endfor %}
+                    
+                    
+                </tbody>
+        
+                    
+            </table>
+        </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+     </div>
+</div>
+
+
+<div class="modal fade" id="popUpWindow5">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Unsubscribers</h4>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Email' %}</th>
+                        <th>{% trans 'Date Of Unsubscription' %}</th>
+                        <th>{% trans 'Channel of Unsubscription' %}</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for list in list_stats %}
+                        <tr>
+                        <td>
+                            {{ list.email }}
+                        </td>
+
+                        <td>
+                            {{ list.date }}
+                        </td>
+
+                        <td>
+                            {{ list.channel }}
+                        </td>
+
+                       </tr>
+                         {% endfor %}
+                    
+                    
+                </tbody>
+        
+                    
+            </table>
+        </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+     </div>
+</div>
+
+
+<div class="modal fade" id="popUpWindow6">
+     <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4>Unique Subject lines</h4>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+
+
+                <thead>
+                    <tr>
+                        <th>{% trans 'Subjects' %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                        {% for list in unique_subject_list %}
+                        <tr>
+                        <td>
+                            {{ list.subject }}
+                        </td>
+                       </tr>
+                         {% endfor %}
+                    
+                    
+                </tbody>
+        
+                    
+            </table>
+        </div>
+            </div>
+            <div class="modal-footer"></div>
+        </div>
+     </div>
+</div>
+{% endblock content %}

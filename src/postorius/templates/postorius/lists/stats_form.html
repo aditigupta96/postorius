@@ -1,0 +1,27 @@
+{% extends "postorius/base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+{% load nav_helpers %}
+{% load staticfiles %}
+{% block content %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css"> 
+    <font color="3399FF"><h2> Stats of Unsubscribers </h2></font>
+    <br>
+    <form action="" method="post">
+	<table class="table table-bordered table-striped">
+            <tr> {{ form.as_table }}</tr>
+        </table>
+
+        {% csrf_token %}
+        <input type="submit" class="btn btn-primary" value="Submit">
+        <a href="{% url 'present_month_stats' list_id %}" class="btn btn-primary">{% trans 'Monthly stats' %}</a>
+    </form>
+
+
+{% endblock content %}
+
+{% block additionaljs %}
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+<script src="{% static 'postorius/js/datepicker.js'%}"></script>
+{% endblock %}

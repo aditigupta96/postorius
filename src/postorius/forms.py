@@ -25,10 +25,14 @@ from django.utils.encoding import smart_text
 from django.utils.translation import ugettext_lazy as _
 from django.utils.version import get_complete_version
 from django.contrib.sites.models import Site
+
+from functools import partial
+
 from django_countries.widgets import CountrySelectWidget
 from django_countries.fields import CountryField 
 from django_countries import countries
 from django.utils.safestring import mark_safe
+
 
 from django_mailman3.lib.mailman import get_mailman_client
 
@@ -1014,3 +1018,9 @@ class MultipleChoiceForm(forms.Form):
         if len(self.cleaned_data['choices']) < 1:
             raise forms.ValidationError(_('Make at least one selection'))
         return self.cleaned_data['choices']
+
+
+class UnsubscriberStatsForm(forms.Form):
+    DateInput = partial(forms.DateInput, {'class': 'datepicker'})
+    start_date = forms.DateField(widget=DateInput(), label=_('From'))
+    end_date = forms.DateField(widget=DateInput(), label=_('To'))
