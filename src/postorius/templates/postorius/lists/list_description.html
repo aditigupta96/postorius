@@ -10,12 +10,16 @@
                     <tr>
                         <th>{% trans 'LIST NAME' %}</th>
                         <th>{% trans 'DESCRIPTION' %}</th>
+                        <th>{% trans 'THREAD-REFERENCES' %}</th>
                     </tr>
                 </thead>
                 <tbody>
                         <tr>
                             <td>{{ listname }}</td>
                             <td>{{ description }}</td>
+                            <td>
+                                <a href="{% url 'thread_references' list_id=list_id %}"> View References </a>
+                            </td>
                         </tr>
                 </tbody>
             </table>
