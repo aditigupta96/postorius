@@ -72,6 +72,8 @@ list_patterns = [
         name='unsubscribe_all'),
     url(r'^description/$', list_views.list_description,
         name='list_description'),
+    url(r'^thread-references/$', list_views.thread_references,
+        name='thread_references'),
 ]
 
 urlpatterns = [
