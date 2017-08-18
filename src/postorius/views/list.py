@@ -1035,7 +1035,7 @@ def thread_references(request, list_id):
     threads_json = thread_response.json()
     hyperkitty_url = settings.HYPERKITTY_URL
 
-    threads = {}
+    thread_references_data = {}
     for thread in threads_json:
         thread_data = {}
         emails_url = thread['emails']
@@ -1051,13 +1051,9 @@ def thread_references(request, list_id):
 
         thread_data['subject'] = thread['subject']
         thread_data['references'] = references
-        threads[thread['thread_id']] = thread_data
-    
-    thread_references_data = {}
-    for key in threads:
-        if(len(threads[key]['references']) > 0):
-            thread_references_data[key] = threads[key]
-    print thread_references_data
+        if len(references) > 0:
+            thread_references_data[thread['thread_id']] = thread_data
+
     return render(request, 'postorius/lists/thread_references.html', {
         'threads': thread_references_data,
         'listname': listname,
