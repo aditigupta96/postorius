@@ -19,36 +19,33 @@
             </table>
         </div>
 
-    
-
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>{% trans 'SUBJECT' %}</th>
-                        <th>{% trans 'References' %}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for key, thread in threads.items %}
+        {% if not threads %}
+        	<h2 style="text-align:center;">NO REFERENCES</h2>
+        {% else %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
                         <tr>
-                            <td>{{ thread.subject }}</td>
-
-                        	<td>
-                        		<ul>
-
-                        		{% for reference in thread.references %}
-                        			<li><a href="{{ reference }}">{{reference}}</a></li>
-                        		{% endfor %}
-
-                        		</ul>
-                        	</td>
-
+                            <th>{% trans 'SUBJECT' %}</th>
+                            <th>{% trans 'References' %}</th>
                         </tr>
-                    {% endfor %}
-
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        {% for key, thread in threads.items %}
+                            <tr>
+                                <td>{{ thread.subject }}</td>
+                        	    <td>
+                        		    <ul>
+                        		    {% for reference in thread.references %}
+                        			    <li><a href="{{ reference }}">{{reference}}</a></li>
+                        		    {% endfor %}
+                        		    </ul>
+                        	    </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
 
 {% endblock %}
